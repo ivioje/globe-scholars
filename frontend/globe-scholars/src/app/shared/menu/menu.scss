@@ -1,0 +1,30 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #ccc;
+    .logo {
+        font-size: 16px;
+        font-weight: bold;
+    }
+    .menu {
+        display: flex;
+        gap: 10px;
+    }
+    .menu a {
+        text-decoration: none;
+        color: #333;
+    }
+    .menu a:hover {
+        color: #000;
+    }
+    .menu button {
+        background-color: #000;
+    }
+    .menu button a {
+        text-decoration: none;
+        color: #fff;
+    }
+}
