@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, get_user_model
 from django.http import HttpResponse
 from io import BytesIO
 import weasyprint
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 
 from .serializers import (
     SignupSerializer,
@@ -14,6 +15,7 @@ from .serializers import (
     UserProfileSerializer,
     PublicUserProfileSerializer,
     UpdateProfileSerializer,
+    LogoutSerializer,
 )
 
 User = get_user_model()
@@ -30,6 +32,11 @@ def get_tokens_for_user(user):
 class SignupView(APIView):
     permission_classes = [AllowAny]
 
+    @extend_schema(
+        request=SignupSerializer,
+        responses={201: UserProfileSerializer},
+        description="Register a new user account"
+    )
     def post(self, request):
         serializer = SignupSerializer(data=request.data)
         if serializer.is_valid():
@@ -46,6 +53,11 @@ class SignupView(APIView):
 class LoginView(APIView):
     permission_classes = [AllowAny]
 
+    @extend_schema(
+        request=LoginSerializer,
+        responses={200: UserProfileSerializer},
+        description="Login with email and password"
+    )
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
         if not serializer.is_valid():
@@ -77,29 +89,49 @@ class LoginView(APIView):
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(
+        request=LogoutSerializer,
+        responses={200: {'message': 'string'}},
+        description="Logout and blacklist refresh token"
+    )
     def post(self, request):
         try:
             refresh_token = request.data.get('refresh')
+            if not refresh_token:
+                return Response(
+                    {'error': 'Refresh token is required.'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
             token = RefreshToken(refresh_token)
             token.blacklist()
+            
             return Response(
                 {'message': 'Logged out successfully.'},
                 status=status.HTTP_200_OK
             )
-        except Exception:
+        except Exception as e:
             return Response(
-                {'error': 'Invalid token.'},
+                {'error': f'Token error: {str(e)}'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-
 
 class ProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(
+        responses={200: UserProfileSerializer},
+        description="Get current user profile"
+    )
     def get(self, request):
         serializer = UserProfileSerializer(request.user)
         return Response(serializer.data)
 
+    @extend_schema(
+        request=UpdateProfileSerializer,
+        responses={200: UserProfileSerializer},
+        description="Update current user profile"
+    )
     def patch(self, request):
         serializer = UpdateProfileSerializer(
             request.user,
@@ -139,6 +171,10 @@ class ProfileExportView(APIView):
     """Download profile as PDF — CV-like format (RM12)"""
     permission_classes = [AllowAny]
 
+    @extend_schema(
+        responses={200: bytes},
+        description="Export user profile as PDF"
+    )
     def get(self, request, pk):
         try:
             user = User.objects.get(pk=pk, is_active=True)

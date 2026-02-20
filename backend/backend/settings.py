@@ -1,5 +1,6 @@
 from pathlib import Path
 from datetime import timedelta
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,13 +22,14 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
     'django_filters',
+    'drf_spectacular',
     # Local apps
     'accounts',
     'repository',
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',  # must be first
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -58,15 +60,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-# Database
+# Database - works for both local and Docker
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'globe_scholars',
-        'USER': 'globe_user',
-        'PASSWORD': 'yourpassword123',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': os.getenv('POSTGRES_DB', 'globe_scholars'),
+        'USER': os.getenv('POSTGRES_USER', 'globe_user'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'yourpassword123'),
+        'HOST': os.getenv('DB_HOST', 'localhost'),  # 'localhost' locally, 'db' in Docker
+        'PORT': os.getenv('DB_PORT', '5432'),
     }
 }
 
@@ -86,6 +88,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 # JWT
@@ -100,12 +103,13 @@ SIMPLE_JWT = {
 # CORS
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",   # Angular dev server
+    "http://localhost:3000",   # React (if needed)
 ]
 CORS_ALLOW_CREDENTIALS = True
 
-# Celery (background tasks for DOCX→PDF conversion)
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
-CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
+# Celery - works for both local and Docker
+CELERY_BROKER_URL = os.getenv('REDIS_URL', 'redis://127.0.0.1:6379/0')
+CELERY_RESULT_BACKEND = os.getenv('REDIS_URL', 'redis://127.0.0.1:6379/0')
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 
@@ -130,3 +134,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # LibreOffice path for DOCX→PDF conversion (RM14)
 LIBREOFFICE_PATH = '/usr/bin/libreoffice'
+
+# Swagger/OpenAPI
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Globe Scholars API',
+    'DESCRIPTION': 'Academic knowledge sharing platform API',
+    'VERSION': '1.0.0',
+}

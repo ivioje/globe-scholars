@@ -86,3 +86,6 @@ class UpdateProfileSerializer(serializers.ModelSerializer):
             'username', 'first_name', 'last_name',
             'bio', 'affiliation', 'country', 'website'
         ]
+
+class LogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
