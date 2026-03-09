@@ -1,4 +1,6 @@
 import {Routes} from '@angular/router';
+import {authGuard} from './guards/auth.guard';
+import {guestGuard} from './guards/guest.guard';
 import {LandingPage} from './external/landing-page/landing-page';
 import {Register} from './external/register/register';
 import {Login} from './external/login/login';
@@ -16,11 +18,13 @@ export const routes: Routes = [
   },
   {
     path: 'register',
-    component: Register
+    component: Register,
+    canActivate: [guestGuard]
   },
   {
     path: 'login',
-    component: Login
+    component: Login,
+    canActivate: [guestGuard]
   },
   {
     path: 'about',
@@ -28,7 +32,7 @@ export const routes: Routes = [
   },
   {
     path: 'scholars',
-    component: ScholarsComponent
+    component: ScholarsComponent,
   },
   {
     path: 'scholars/:id',
@@ -41,10 +45,12 @@ export const routes: Routes = [
   {
     path: 'upload',
     component: UploadWorkComponent,
+    canActivate: [authGuard],
   },
   {
     path: 'profile',
-    component: UserProfileComponent
+    component: UserProfileComponent,
+    canActivate: [authGuard]
   },
   {
     path: '**',
