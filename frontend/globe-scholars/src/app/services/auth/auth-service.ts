@@ -8,7 +8,9 @@ import {NewUser, UserAccount, Tokens} from './interface';
   providedIn: 'root',
 })
 export class AuthService {
-  public isLoggedIn: boolean = false
+  get isLoggedIn(): boolean {
+    return !!sessionStorage.getItem('access_token');
+  }
 
   constructor(private http: HttpClient) {
   }
@@ -25,7 +27,6 @@ export class AuthService {
     return this.http.post<UserAccount>(`${this.authURL}/login/`, params).pipe(
       tap((response: UserAccount) => {
         this.setToken(response.tokens);
-        this.isLoggedIn = true;
       })
     )
   }
