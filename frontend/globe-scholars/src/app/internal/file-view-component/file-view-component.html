@@ -1,0 +1,38 @@
+<div class="file-container">
+    <div class="file-section">
+        <div class="header">
+            <h1>UNDERSTANDING AI</h1>
+            <div class="meta-row">
+                <span class="meta-label">Author:</span>
+                <strong>Jon Doe</strong>
+            </div>
+            <div class="meta-row">
+                <span class="meta-label">Date:</span>
+                <strong>2025-11-21</strong>
+            </div>
+            <div class="meta-row">
+                <span class="meta-label">Description</span>
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+            </div>
+        </div>
+
+        <div class="content">
+            @for(block of contentBlocks; track $index) {
+                <div class="content-block">
+                    <h4>{{ block.title }}</h4>
+                    <p>{{ block.body }}</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <div class="author-card">
+            <div class="avatar"></div>
+            <h2>John Doe</h2>
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+            <p class="reaction">I like this!</p>
+        </div>
+    </div>
+</div>
