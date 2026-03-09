@@ -1,17 +1,74 @@
-import { Component } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {UpperCasePipe} from '@angular/common';
+import {ActivatedRoute} from '@angular/router';
+import {PdfViewerModule} from 'ng2-pdf-viewer';
+import {RepositoryService} from '../../services/repository/repository-service';
+import {WorkDetail} from '../../services/repository/work.model';
 
 @Component({
   selector: 'app-file-view-component',
-  imports: [],
+  imports: [PdfViewerModule, UpperCasePipe],
   templateUrl: './file-view-component.html',
   styleUrl: './file-view-component.scss',
 })
-export class FileViewComponent {
-  contentBlocks = [
-    { title: 'The standard Lorem Ipsum passage, used since the 1500s', body: '"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."' },
-    { title: 'The standard Lorem Ipsum passage, used since the 1500s', body: '"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."' },
-    { title: 'The standard Lorem Ipsum passage, used since the 1500s', body: '"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."' },
-    { title: 'The standard Lorem Ipsum passage, used since the 1500s', body: '"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."' },
-    { title: 'The standard Lorem Ipsum passage, used since the 1500s', body: '"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."' },
-  ];
+export class FileViewComponent implements OnInit, OnDestroy {
+  work: WorkDetail | null = null;
+  downloadURL: string | null = null;
+  isLoading = true;
+  error: string | null = null;
+  hasReacted = false;
+
+  private objectUrl: string | null = null;
+
+  constructor(
+    private route: ActivatedRoute,
+    private repositoryService: RepositoryService,
+  ) {}
+
+  ngOnInit(): void {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.repositoryService.getWorkDetail(id).subscribe({
+      next: (work) => {
+        this.work = work;
+        this.loadPdf(id);
+      },
+      error: () => {
+        this.error = 'Failed to load work details.';
+        this.isLoading = false;
+      }
+    });
+  }
+
+  private loadPdf(id: number): void {
+    this.repositoryService.downloadWork(id).subscribe({
+      next: (blob) => {
+        this.objectUrl = URL.createObjectURL(blob);
+        this.downloadURL = this.objectUrl;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.error = 'Failed to load file.';
+        this.isLoading = false;
+      }
+    });
+  }
+
+  react(): void {
+    if (!this.work || this.hasReacted) return;
+    this.repositoryService.addReaction(this.work.id).subscribe({
+      next: (res) => {
+        console.log(res)
+        this.hasReacted = true;
+        if (this.work) {
+          this.work.reaction_count = String(Number(this.work.reaction_count) + 1);
+        }
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.objectUrl) {
+      URL.revokeObjectURL(this.objectUrl);
+    }
+  }
 }

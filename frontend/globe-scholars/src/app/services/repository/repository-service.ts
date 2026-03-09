@@ -28,4 +28,12 @@ export class RepositoryService {
     });
     return this.http.get(`${this.apiUrl}/${id}/download/`, { headers, responseType: 'blob' });
   }
+
+  addReaction(id: number): Observable<void> {
+    const token = sessionStorage.getItem('access_token');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+    return this.http.post<void>(`${this.apiUrl}/${id}/react/`, {}, { headers });
+  }
 }

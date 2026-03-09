@@ -41,6 +41,9 @@
   }
 
   .content {
+    padding: 20px;
+    background-color: #e0e0e0;
+
     .content-block {
       border: 1px solid #e0e0e0;
       padding: 1rem;
@@ -87,14 +90,23 @@
 
     p {
       font-size: 0.85rem;
-      font-weight: 600;
+      font-weight: normal;
       line-height: 1.5;
       margin: 0;
     }
 
-    .reaction {
-      font-weight: 400;
-      color: #444;
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+
+      button {
+        outline: none;
+        border: none;
+        padding: 1px 5x;
+        background: none;
+        cursor: pointer;
+      }
     }
   }
 }
