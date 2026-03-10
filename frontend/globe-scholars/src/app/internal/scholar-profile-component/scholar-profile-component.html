@@ -6,14 +6,6 @@
     <div class="state-message error">{{ error }}</div>
   } @else if (scholar) {
 
-    <div class="breadcrumb">
-      <a routerLink="/">Home</a>
-      <span> > </span>
-      <a routerLink="/scholars">Scholars</a>
-      <span> > </span>
-      <span>{{ scholar.fullName }}</span>
-    </div>
-
     <div class="profile-hero">
       <div class="hero-banner"></div>
       <div class="hero-content">
@@ -119,7 +111,7 @@
                     <p class="work-year">{{ work.publication_year }}</p>
                   </div>
                   <div class="work-actions">
-                    <button routerLink="/repository/{{ work.id }}">Open</button>
+                    <button routerLink="/home/repository/{{ work.id }}">Open</button>
                   </div>
                 </div>
               }

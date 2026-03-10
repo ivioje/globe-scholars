@@ -1,11 +1,5 @@
 <div class="profile-page">
 
-  <div class="breadcrumb">
-    <a routerLink="/">Home</a>
-    <span> > </span>
-    <span>Profile</span>
-  </div>
-
   @if (isLoading) {
     <div class="state-message">Loading...</div>
   } @else if (error) {
