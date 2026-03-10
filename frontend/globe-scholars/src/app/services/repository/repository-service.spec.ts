@@ -6,7 +6,7 @@ import {environment} from '../../../environments/environment.development';
 
 describe('RepositoryService', () => {
   let service: RepositoryService;
-  let httpMock: HttpTestingController;
+  let httpTestingController: HttpTestingController;
   const apiUrl = `${environment.baseURL}/repository`;
 
   const mockWorkSummary = {
@@ -30,10 +30,10 @@ describe('RepositoryService', () => {
       providers: [provideHttpClient(), provideHttpClientTesting()]
     });
     service = TestBed.inject(RepositoryService);
-    httpMock = TestBed.inject(HttpTestingController);
+    httpTestingController = TestBed.inject(HttpTestingController);
   });
 
-  afterEach(() => httpMock.verify());
+  afterEach(() => httpTestingController.verify());
 
   it('should be created', () => {
     expect(service).toBeTruthy();
@@ -45,7 +45,7 @@ describe('RepositoryService', () => {
       expect(works[0].title).toBe('Test Work');
     });
 
-    const req = httpMock.expectOne(`${apiUrl}/`);
+    const req = httpTestingController.expectOne(`${apiUrl}/`);
     expect(req.request.method).toBe('GET');
     req.flush({count: 1, next: null, previous: null, results: [mockWorkSummary]});
   });
@@ -56,7 +56,7 @@ describe('RepositoryService', () => {
       expect(work.description).toBe('Test description');
     });
 
-    const req = httpMock.expectOne(`${apiUrl}/1/`);
+    const req = httpTestingController.expectOne(`${apiUrl}/1/`);
     expect(req.request.method).toBe('GET');
     req.flush(mockWorkDetail);
   });
@@ -66,7 +66,7 @@ describe('RepositoryService', () => {
 
     service.downloadWork(1).subscribe();
 
-    const req = httpMock.expectOne(`${apiUrl}/1/download/`);
+    const req = httpTestingController.expectOne(`${apiUrl}/1/download/`);
     expect(req.request.headers.get('Authorization')).toBe('Bearer test-token');
     req.flush(new Blob());
   });
@@ -76,7 +76,7 @@ describe('RepositoryService', () => {
       expect(res).toBeTruthy();
     });
 
-    const req = httpMock.expectOne(`${apiUrl}/1/react/`);
+    const req = httpTestingController.expectOne(`${apiUrl}/1/react/`);
     expect(req.request.method).toBe('POST');
     expect(req.request.headers.has('Authorization')).toBeTrue();
     req.flush({});
@@ -88,7 +88,7 @@ describe('RepositoryService', () => {
       expect(works[0].uploader.id).toBe(1);
     });
 
-    const req = httpMock.expectOne(`${apiUrl}/?uploader=5`);
+    const req = httpTestingController.expectOne(`${apiUrl}/?uploader=5`);
     expect(req.request.method).toBe('GET');
     req.flush({count: 1, next: null, previous: null, results: [mockWorkSummary]});
   });
@@ -98,14 +98,14 @@ describe('RepositoryService', () => {
       expect(works.length).toBe(0);
     });
 
-    const req = httpMock.expectOne(`${apiUrl}/`);
+    const req = httpTestingController.expectOne(`${apiUrl}/`);
     req.flush({count: 0, next: null, previous: null, results: []});
   });
 
   it('should filter works by uploader id', () => {
     service.getWorksByUploader(99).subscribe();
 
-    const req = httpMock.expectOne(`${apiUrl}/?uploader=99`);
+    const req = httpTestingController.expectOne(`${apiUrl}/?uploader=99`);
     expect(req.request.url).toContain('uploader=99');
     req.flush({count: 0, next: null, previous: null, results: []});
   });
