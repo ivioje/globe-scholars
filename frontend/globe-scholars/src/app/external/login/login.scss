@@ -1,8 +1,10 @@
 .form-container {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    padding-top: 5vh;
     min-height: 100vh;
+    margin: 0 auto;
 
     .error {
         color: #B72323;
@@ -28,7 +30,7 @@
         display: flex;
         justify-content: space-between;
         flex-direction: column;
-       
+
         input {
           border: 1px solid #C4C4C4;
           border-radius: 5px;
@@ -54,29 +56,29 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin: 30px 0px 16px 0px;
-    
+            margin: 30px 0 16px 0;
+
             &:hover {
               background-color: #333333;
             }
           }
-    
+
           .footer {
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 6px;
-    
+
             p {
               margin: 0;
               color: #555555;
             }
-    
+
             a {
               font-weight: 700;
               color: #1a1a1a;
               text-decoration: none;
-    
+
               &:hover {
                 text-decoration: underline;
               }

@@ -32,29 +32,29 @@ export const routes: Routes = [
     component: AboutComponent
   },
   {
-    path: 'scholars',
+    path: 'home/scholars',
     component: ScholarsComponent,
   },
   {
-    path: 'scholars/:id',
+    path: 'home/scholars/:id',
     component: ScholarProfileComponent
   },
   {
-    path: 'repository',
+    path: 'home/repository',
     component: RepositoryComponent,
   },
   {
-    path: 'repository/:id',
+    path: 'home/repository/:id',
     component: FileViewComponent,
     canActivate: [authGuard]
   },
   {
-    path: 'upload',
+    path: 'home/upload',
     component: UploadWorkComponent,
     canActivate: [authGuard],
   },
   {
-    path: 'profile',
+    path: 'home/profile',
     component: UserProfileComponent,
     canActivate: [authGuard]
   },

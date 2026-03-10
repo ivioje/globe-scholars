@@ -74,6 +74,6 @@ export class ScholarsComponent implements OnInit {
   }
 
   goToProfile(id: number) {
-    this.router.navigate(['/scholars', id]);
+    this.router.navigate(['/home/scholars', id]);
   }
 }

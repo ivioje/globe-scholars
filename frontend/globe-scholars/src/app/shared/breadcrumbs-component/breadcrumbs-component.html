@@ -1,1 +1,11 @@
-<p>breadcrumbs-component works!</p>
+<div class="breadcrumb">
+  @if (pathParts().length > 0) {
+    @for (part of pathParts(); track $index) {
+      <a [routerLink]="part.path">{{ part.label }}</a>
+      @if ($index < pathParts().length - 1) {
+        <span> > </span>
+      }
+    }
+  }
+
+</div>

@@ -1,0 +1,25 @@
+.breadcrumb {
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 20px;
+
+  margin-top: 20px;
+  margin-left: 40px;
+
+  a {
+    text-decoration: none;
+    color: #777;
+  }
+
+  a:active {
+    font-weight: 500;
+  }
+  a:hover {
+    color: #434343;
+    text-decoration: underline;
+  }
+
+  a:visited {
+    color: #777;
+  }
+}

@@ -84,7 +84,7 @@ export class RepositoryComponent implements OnInit {
       this.showLoginModal = true;
       return;
     }
-    this.router.navigate(['/repository', workId]);
+    this.router.navigate(['/home/repository', workId]);
   }
 
   activeFilter = 'all-time';

@@ -6,12 +6,12 @@
     <div class="menu">
         <a routerLink="/" routerLinkActive="active">Home</a>
         <a routerLink="/about" routerLinkActive="active">About</a>
-        <a routerLink="/scholars" routerLinkActive="active">Scholars</a>
-        <a routerLink="/repository" routerLinkActive="active">Repository</a>
+        <a routerLink="/home/scholars" routerLinkActive="active">Scholars</a>
+        <a routerLink="/home/repository" routerLinkActive="active">Repository</a>
 
         <div class="menu-btns">
             @if(authService.isLoggedIn && userImage){
-              <div class="profileImage" routerLink="/profile" style="cursor: pointer;">
+              <div class="profileImage" routerLink="/home/profile" style="cursor: pointer;">
                     <img [src]="userImage"  alt=""/>
                 </div>
             }
@@ -19,7 +19,7 @@
                 @if(!authService.isLoggedIn) {
                     <a routerLink="/login">LOGIN</a>
                 } @else {
-                    <a routerLink="/upload">UPLOAD</a>
+                    <a routerLink="/home/upload">UPLOAD</a>
                 }
             </button>
         </div>
