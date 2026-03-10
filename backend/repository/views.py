@@ -64,7 +64,11 @@ class ScholarlyWorkListView(generics.ListAPIView):
         author = self.request.query_params.get('author', None)
         if author:
             queryset = queryset.filter(authors__icontains=author)
-        
+
+        uploader_id = self.request.query_params.get('uploader', None)
+        if uploader_id:
+            queryset = queryset.filter(uploader__id=uploader_id)
+
         return queryset
 
 

@@ -36,4 +36,10 @@ export class RepositoryService {
     });
     return this.http.post<void>(`${this.apiUrl}/${id}/react/`, {}, { headers });
   }
+
+  getWorksByUploader(uploaderId: number): Observable<WorkSummary[]> {
+    return this.http.get<WorksResponse>(`${this.apiUrl}/?uploader=${uploaderId}`).pipe(
+      map(res => res.results)
+    );
+  }
 }

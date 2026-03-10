@@ -3,6 +3,8 @@ import {CommonModule} from '@angular/common';
 import {ActivatedRoute, RouterModule} from '@angular/router';
 import {ScholarsService} from '../../services/scholars/scholars-service';
 import {Scholar} from '../../services/scholars/scholar.model';
+import {RepositoryService} from '../../services/repository/repository-service';
+import {WorkSummary} from '../../services/repository/work.model';
 
 @Component({
   selector: 'app-scholar-profile',
@@ -15,10 +17,13 @@ export class ScholarProfileComponent implements OnInit {
   scholar: Scholar | null = null;
   isLoading = true;
   error: string | null = null;
+  works: WorkSummary[] = [];
+  worksLoading = true;
 
   constructor(
     private route: ActivatedRoute,
-    private scholarsService: ScholarsService
+    private scholarsService: ScholarsService,
+    private repositoryService: RepositoryService,
   ) {
   }
 
@@ -28,6 +33,7 @@ export class ScholarProfileComponent implements OnInit {
       next: (data) => {
         this.scholar = data;
         this.isLoading = false;
+        this.loadWorks(data.id);
       },
       error: () => {
         this.error = 'Failed to load scholar profile.';
@@ -65,5 +71,17 @@ export class ScholarProfileComponent implements OnInit {
         console.error('Failed to download profile');
       }
     });
+  }
+
+  loadWorks(uploaderId: number) {
+    this.repositoryService.getWorksByUploader(uploaderId).subscribe({
+      next: (data) => {
+        this.works = data;
+        this.worksLoading = false;
+      },
+      error: () => {
+        this.worksLoading = false;
+      }
+    })
   }
 }

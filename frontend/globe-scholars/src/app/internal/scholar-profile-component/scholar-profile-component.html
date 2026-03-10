@@ -105,9 +105,26 @@
 
         <section class="works-section">
           <h2>My Works</h2>
-          <div class="works-placeholder">
+          @if (worksLoading) {
+            <p>Loading...</p>
+          } @else if (works.length === 0) {
             <p class="placeholder-text">No works uploaded yet.</p>
-          </div>
+          } @else {
+            <div class="works-list">
+              @for (work of works; track work.id) {
+                <div class="work-card">
+                  <div class="work-info">
+                    <p class="work-title">{{ work.title }}</p>
+                    <p class="work-authors">{{ work.authors }}</p>
+                    <p class="work-year">{{ work.publication_year }}</p>
+                  </div>
+                  <div class="work-actions">
+                    <button routerLink="/repository/{{ work.id }}">Open</button>
+                  </div>
+                </div>
+              }
+            </div>
+          }
         </section>
         <section class="stats-section">
           <h2>My Stats</h2>
