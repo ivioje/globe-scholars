@@ -4,7 +4,7 @@ import {RepositoryService} from '../../services/repository/repository-service';
 import {WorkSummary} from '../../services/repository/work.model';
 import {ScholarsService} from '../../services/scholars/scholars-service';
 import {Scholar} from '../../services/scholars/scholar.model';
-import { AuthService } from '../../services/auth/auth-service';
+import {AuthService} from '../../services/auth/auth-service';
 import {Router, RouterLink} from '@angular/router';
 import {FormsModule} from '@angular/forms';
 
@@ -101,15 +101,21 @@ export class RepositoryComponent implements OnInit {
 
         const matchesYear = (() => {
           switch (this.activeFilter) {
-            case 'last-year': return work.publication_year >= now - 1;
-            case 'last-5-years': return work.publication_year >= now - 5;
-            case 'last-10-years': return work.publication_year >= now - 10;
-            default: return true;
+            case 'last-year':
+              return work.publication_year >= now - 1;
+            case 'last-5-years':
+              return work.publication_year >= now - 5;
+            case 'last-10-years':
+              return work.publication_year >= now - 10;
+            default:
+              return true;
           }
         })();
 
         return matchesSearch && matchesYear;
-      });
+      })
+      // RS6 - default sorting by upload date
+      .sort((a, b) => new Date(b.uploaded_at).getTime() - new Date(a.uploaded_at).getTime());
   }
 
   setFilter(id: string) {
