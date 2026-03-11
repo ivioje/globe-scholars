@@ -88,6 +88,7 @@ export class RepositoryComponent implements OnInit {
   }
 
   activeFilter = 'all-time';
+  authorFilter = '';
 
   searchQuery = '';
 
@@ -112,7 +113,14 @@ export class RepositoryComponent implements OnInit {
           }
         })();
 
-        return matchesSearch && matchesYear;
+        const matchesAuthor = (() => {
+          if (this.authorFilter) {
+            return work.authors.toLowerCase().includes(this.authorFilter.toLowerCase());
+          }
+          return true;
+        })();
+
+        return matchesSearch && matchesYear && matchesAuthor;
       })
       // RS6 - default sorting by upload date
       .sort((a, b) => new Date(b.uploaded_at).getTime() - new Date(a.uploaded_at).getTime());
@@ -120,5 +128,17 @@ export class RepositoryComponent implements OnInit {
 
   setFilter(id: string) {
     this.activeFilter = id;
+  }
+
+  setAuthorFilter(id: number) {
+    this.scholarsService.getScholarById(id).subscribe({
+      next: (scholar) => {
+        this.authorFilter = scholar.fullName;
+      }
+    });
+  }
+
+  resetAuthorFilter() {
+    this.authorFilter = '';
   }
 }
