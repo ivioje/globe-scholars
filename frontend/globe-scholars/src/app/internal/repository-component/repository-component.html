@@ -49,13 +49,19 @@
     <div class="file-listing">
       <div class="listing-header">
         <h4>Scholars</h4>
-        <button>
-          <a routerLink="/scholars">View All</a>
-        </button>
+        <div class="listing-actions">
+          @if (authorFilter) {
+            <button (click)="resetAuthorFilter()">Reset</button>
+          }
+          <a routerLink="/home/scholars">View All</a>
+        </div>
       </div>
       <div class="scholars-list">
         @for (scholar of scholars; track scholar.id) {
-          <div class="scholar-row">
+          <div class="scholar-row"
+               (click)="setAuthorFilter(scholar.id)"
+               [class.active]="authorFilter === scholar.fullName"
+          >
             <img
               [src]="'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png'"
               [alt]="scholar.fullName"

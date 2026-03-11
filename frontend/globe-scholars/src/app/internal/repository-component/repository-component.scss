@@ -216,6 +216,38 @@
         }
       }
 
+      .listing-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        button {
+          background: none;
+          border: 1px solid #d0d0d0;
+          border-radius: 5px;
+          padding: 3px 10px;
+          cursor: pointer;
+          font-family: inherit;
+          font-size: 13px;
+
+          &:hover {
+            background: #f0f0f0;
+          }
+        }
+        a {
+          font-size: 13px;
+          color: #111;
+          text-decoration: none;
+          border: 1px solid #d0d0d0;
+          border-radius: 5px;
+          padding: 3px 10px;
+
+          &:hover {
+            background: #f0f0f0;
+          }
+        }
+      }
+
       .scholars-list {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -229,6 +261,14 @@
           border-radius: 8px;
           overflow: hidden;
           cursor: pointer;
+
+          &.active {
+            border-color: #111;
+
+            p:first-child {
+              font-weight: 700;
+            }
+          }
 
           img {
             width: 100%;
