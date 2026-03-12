@@ -78,14 +78,12 @@
 </div>
 
 @if (showLoginModal) {
-  <div class="modal-overlay" (click)="showLoginModal = false">
-    <div class="modal" (click)="$event.stopPropagation()">
-      <h3>Login Required</h3>
-      <p>Log in to view this file.</p>
-      <div class="modal-actions">
-        <button type="button" (click)="showLoginModal = false">Cancel</button>
-        <a routerLink="/login"><button type="button">Login</button></a>
-      </div>
-    </div>
-  </div>
+  <app-modal-component
+    title="Login Required"
+    message="Log in to view this file."
+    cancelLabel="Cancel"
+    confirmLabel="Login"
+    confirmLink="/login"
+    (cancelled)="showLoginModal = false"
+  ></app-modal-component>
 }

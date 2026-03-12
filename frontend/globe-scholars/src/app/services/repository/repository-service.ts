@@ -42,4 +42,13 @@ export class RepositoryService {
       map(res => res.results)
     );
   }
+
+  deleteWork(id: number): Observable<void> {
+    const token = sessionStorage.getItem('access_token');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+    return this.http.get<void>(`${this.apiUrl}/${id}/delete/`, { headers });
+  }
+
 }

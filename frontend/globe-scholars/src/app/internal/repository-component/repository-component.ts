@@ -8,10 +8,11 @@ import {AuthService} from '../../services/auth/auth-service';
 import {Router, RouterLink} from '@angular/router';
 import {FormsModule} from '@angular/forms';
 import {BoldSearchTermPipe} from './bold-search-term.pipe';
+import {ModalComponent} from '../../shared/modal-component/modal-component';
 
 @Component({
   selector: 'app-repository-component',
-  imports: [CommonModule, DatePipe, RouterLink, FormsModule, BoldSearchTermPipe],
+  imports: [CommonModule, DatePipe, RouterLink, FormsModule, BoldSearchTermPipe, ModalComponent],
   templateUrl: './repository-component.html',
   styleUrl: './repository-component.scss',
 })
