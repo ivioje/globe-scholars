@@ -5,11 +5,12 @@ import {ScholarsService} from '../../services/scholars/scholars-service';
 import {Scholar} from '../../services/scholars/scholar.model';
 import {RepositoryService} from '../../services/repository/repository-service';
 import {WorkSummary} from '../../services/repository/work.model';
+import {ModalComponent} from '../../shared/modal-component/modal-component';
 
 @Component({
   selector: 'app-scholar-profile',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ModalComponent],
   templateUrl: './scholar-profile-component.html',
   styleUrl: './scholar-profile-component.scss',
 })
@@ -19,6 +20,12 @@ export class ScholarProfileComponent implements OnInit {
   error: string | null = null;
   works: WorkSummary[] = [];
   worksLoading = true;
+  showConfirmationModal = false;
+  workToDelete: number | null = null;
+
+  get currentUsername(): string | null {
+    return sessionStorage.getItem('username');
+  }
 
   constructor(
     private route: ActivatedRoute,
@@ -83,5 +90,26 @@ export class ScholarProfileComponent implements OnInit {
         this.worksLoading = false;
       }
     })
+  }
+
+  confirmDelete(id: number) {
+    this.workToDelete = id;
+    this.showConfirmationModal = true;
+  }
+
+  onDeleteConfirmed() {
+    if (this.workToDelete === null) return;
+    this.repositoryService.deleteWork(this.workToDelete).subscribe({
+      next: () => {
+        this.works = this.works.filter(w => w.id !== this.workToDelete);
+        this.showConfirmationModal = false;
+        this.workToDelete = null;
+      },
+      error: () => {
+        alert('Failed to delete file');
+        this.showConfirmationModal = false;
+        this.workToDelete = null;
+      }
+    });
   }
 }

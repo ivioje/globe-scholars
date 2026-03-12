@@ -112,6 +112,9 @@
                   </div>
                   <div class="work-actions">
                     <button routerLink="/home/repository/{{ work.id }}">Open</button>
+                    @if (work.uploader.username === currentUsername) {
+                      <button (click)="confirmDelete(work.id)">Delete</button>
+                    }
                   </div>
                 </div>
               }
@@ -140,3 +143,14 @@
 
   }
 </div>
+
+@if (showConfirmationModal) {
+  <app-modal-component
+    title="Are you sure?"
+    message="Please confirm deletion. This cannot be undone."
+    cancelLabel="Cancel"
+    confirmLabel="Delete"
+    (cancelled)="showConfirmationModal = false; workToDelete = null"
+    (confirmed)="onDeleteConfirmed()"
+  ></app-modal-component>
+}

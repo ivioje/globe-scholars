@@ -1,0 +1,16 @@
+<div class="modal-overlay" (click)="onOverlayClick()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <h3>{{ title }}</h3>
+    <p>{{ message }}</p>
+    <div class="modal-actions">
+      <button type="button" (click)="onCancel()">{{ cancelLabel }}</button>
+      @if (confirmLink) {
+        <a [routerLink]="confirmLink">
+          <button type="button" (click)="onConfirm()">{{ confirmLabel }}</button>
+        </a>
+      } @else if (confirmLabel) {
+        <button type="button" (click)="onConfirm()">{{ confirmLabel }}</button>
+      }
+    </div>
+  </div>
+</div>
