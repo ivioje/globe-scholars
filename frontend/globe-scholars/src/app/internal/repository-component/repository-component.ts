@@ -22,6 +22,9 @@ export class RepositoryComponent implements OnInit {
   isLoading = true;
   error: string | null = null;
   showLoginModal = false;
+  currentPage = 1;
+  hasNext = false;
+  hasPrev = false;
 
   buttons = [
     {id: 'last-year', text: 'Last Year'},
@@ -29,6 +32,10 @@ export class RepositoryComponent implements OnInit {
     {id: 'last-10-years', text: 'Last 10 Years'},
     {id: 'all-time', text: 'All Time'},
   ];
+
+  activeFilter = 'all-time';
+  authorFilter = '';
+  searchQuery = '';
 
   constructor(
     private repositoryService: RepositoryService,
@@ -39,15 +46,17 @@ export class RepositoryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadWorks();
+    this.loadWorks(this.currentPage);
     this.loadScholars();
   }
 
-  loadWorks() {
+  loadWorks(page: number) {
     this.isLoading = true;
-    this.repositoryService.getWorks().subscribe({
-      next: (data) => {
-        this.works = data;
+    this.repositoryService.getWorks(page).subscribe({
+      next: (res) => {
+        this.works = res.results;
+        this.hasNext = !!res.next;
+        this.hasPrev = !!res.previous;
         this.isLoading = false;
       },
       error: () => {
@@ -88,11 +97,6 @@ export class RepositoryComponent implements OnInit {
     }
     this.router.navigate(['/home/repository', workId]);
   }
-
-  activeFilter = 'all-time';
-  authorFilter = '';
-
-  searchQuery = '';
 
   get filteredWorks(): WorkSummary[] {
     const now = new Date().getFullYear();
@@ -142,5 +146,19 @@ export class RepositoryComponent implements OnInit {
 
   resetAuthorFilter() {
     this.authorFilter = '';
+  }
+
+  prevPage() {
+    if (this.hasPrev) {
+      this.currentPage--;
+      this.loadWorks(this.currentPage);
+    }
+  }
+
+  nextPage() {
+    if (this.hasNext) {
+      this.currentPage++;
+      this.loadWorks(this.currentPage);
+    }
   }
 }

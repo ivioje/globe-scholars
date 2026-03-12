@@ -108,6 +108,49 @@
       }
     }
 
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 20px;
+      width: 100%;
+
+      button {
+        outline: none;
+        min-width: 34px;
+        padding: 5px 10px;
+        border: 1px solid #d0d0d0;
+        border-radius: 5px;
+        background: #fff;
+        color: #111;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 13px;
+
+        &:hover:not(:disabled) {
+          background: #e8e8e8;
+        }
+
+        &.active {
+          background: #111;
+          color: #fff;
+          border-color: #111;
+        }
+
+        &:disabled {
+          opacity: 0.4;
+          cursor: default;
+        }
+      }
+
+      .page-indicator {
+        font-size: 13px;
+        color: #555;
+        padding: 0 4px;
+      }
+    }
+
     .file-card {
       display: flex;
       flex-direction: column;
@@ -159,8 +202,8 @@
           font-style: normal;
         }
       }
+      }
     }
-  }
 
   .right-column {
     width: 30%;

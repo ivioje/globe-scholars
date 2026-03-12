@@ -11,10 +11,8 @@ export class RepositoryService {
 
   constructor(private http: HttpClient) {}
 
-  getWorks(): Observable<WorkSummary[]> {
-    return this.http.get<WorksResponse>(`${this.apiUrl}/`).pipe(
-      map(res => res.results)
-    );
+  getWorks(page: number = 1): Observable<WorksResponse> {
+    return this.http.get<WorksResponse>(`${this.apiUrl}/?page=${page}`);
   }
 
   getWorkDetail(id: number): Observable<WorkDetail> {

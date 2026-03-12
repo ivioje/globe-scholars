@@ -13,6 +13,13 @@
     } @else if (filteredWorks.length === 0) {
       <div class="state-message">No works found.</div>
     } @else {
+      @if (hasPrev || hasNext) {
+        <div class="pagination">
+          <button (click)="prevPage()" [disabled]="!hasPrev">Previous</button>
+          <span class="page-indicator">Page {{ currentPage }}</span>
+          <button (click)="nextPage()" [disabled]="!hasNext">Next</button>
+        </div>
+      }
       @for (work of filteredWorks; track work.id) {
         <div class="file-card">
           <div class="file-grid">
