@@ -3,8 +3,9 @@
     justify-content: space-between;
     align-items: center;
     padding: 5px 20px;
-    background-color: #ffffff;
-    border-bottom: 1px solid #ccc;
+    background-color: var(--bg-page);
+    border-bottom: 1px solid var(--border-default);
+    
     .logo {
         font-size: 16px;
         font-weight: bold;
@@ -13,38 +14,54 @@
         display: flex;
         align-items: center;
         gap: 20px;
-    }
-    .menu a {
-        text-decoration: none;
-        color: #333;
-        font-weight: 500;
-    }
-    .menu a:hover {
-        color: #000;
-    }
-    .menu a:active {
-        font-weight: 700;
-    }
-    .menu button {
-        background-color: #000;
-        padding: 10px 20px;
-        outline: none;
-        border: 1px solid;
-        border-radius: 5px;
-        font-size: 15px;
-    }
-    .menu .menu-btns {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    .menu button a {
-        text-decoration: none;
-        color: #fff;
-    }
-    .menu div img {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
+
+        a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+
+            &:hover {
+                color: var(--text-primary);
+            }
+            &:active {
+                font-weight: 700;
+            }
+        }
+
+        button {
+            background-color: var(--btn-primary-bg);
+            padding: 10px 20px;
+            outline: none;
+            border: 1px solid;
+            border-radius: 5px;
+            font-size: 15px;
+
+            a {
+                text-decoration: none;
+                color: var(--btn-primary-text);
+            }
+        }
+       
+        .menu-btns {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            .theme-toggle {
+                background: none;
+                border: 1px solid var(--border-default);
+                padding: 6px 10px;
+                font-size: 16px;
+                cursor: pointer;
+                border-radius: 5px;
+                line-height: 1;
+                color: inherit;
+            }
+            .profileImage img {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+            }
+        }
     }
 }

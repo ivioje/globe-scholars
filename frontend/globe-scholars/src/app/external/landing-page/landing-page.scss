@@ -3,12 +3,12 @@
   justify-content: center;
   align-items: center;
   padding: 60px 20px 20px;
-  background-color: #ffffff;
+  background-color: var(--bg-page);
 
   h1 {
     font-size: 28px;
     font-weight: bold;
-    color: #000;
+    color: var(--text-primary);
     text-align: center;
   }
 }
@@ -19,21 +19,21 @@
   align-items: center;
   gap: 20px;
   padding: 20px;
-  background-color: #ffffff;
+  background-color: var(--bg-page);
 
   button {
-    color: #fff;
-    background-color: #000;
+    color: var(--btn-primary-text);
+    background-color: var(--btn-primary-bg);
     padding: 12px 25px;
     outline: none;
-    border: 1px solid #000;
+    border: 1px solid var(--btn-primary-bg);
     border-radius: 5px;
     font-size: 15px;
     cursor: pointer;
     transition: 0.2s ease;
 
     &:hover {
-      background-color: #333;
+      background-color: var(--btn-primary-bg-hover);
     }
 
     &:active {
@@ -42,13 +42,13 @@
   }
 
   .secondary {
-    background-color: #f2f2f2;
-    border: 1px solid #ccc;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-default);
 
-    color: #000;
+    color: var(--text-primary);
 
     &:hover {
-      background-color: #e6e6e6;
+      background-color: var(--bg-hover);
     }
   }
 }

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth/auth-service';
+import { ThemeService } from '../../services/theme/theme-service';
 
 @Component({
   selector: 'app-menu',
@@ -11,6 +12,7 @@ import { AuthService } from '../../services/auth/auth-service';
 export class Menu {
   constructor(
     public authService: AuthService,
+    public themeService: ThemeService,
   ){}
 
   userImage:string = "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png";
