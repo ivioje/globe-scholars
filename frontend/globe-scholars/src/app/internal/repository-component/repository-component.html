@@ -2,7 +2,7 @@
   <div class="left-column">
     <div class="search-bar">
       <h4>Search Bar</h4>
-      <input type="text" [(ngModel)]="searchQuery" placeholder="Search by name..."/>
+      <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" placeholder="Search by name..."/>
       <small>Type to search for documents by name</small>
     </div>
 

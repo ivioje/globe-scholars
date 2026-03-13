@@ -11,8 +11,10 @@ export class RepositoryService {
 
   constructor(private http: HttpClient) {}
 
-  getWorks(page: number = 1): Observable<WorksResponse> {
-    return this.http.get<WorksResponse>(`${this.apiUrl}/?page=${page}`);
+  getWorks(page: number = 1, search: string = ''): Observable<WorksResponse> {
+    const params = new URLSearchParams({ page: String(page) });
+    if (search) params.set('search', search);
+    return this.http.get<WorksResponse>(`${this.apiUrl}/?${params}`);
   }
 
   getWorkDetail(id: number): Observable<WorkDetail> {
