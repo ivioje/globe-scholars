@@ -24,7 +24,8 @@
         background-color: var(--bg-page);
         padding: 30px 60px;
         border-radius: 8px;
-        box-shadow: 1px 3px 5px rgba(132, 132, 132, 0.3);
+        box-shadow: 0 4px 10px rgba(118, 118, 118, 0.1);
+        border: var(--border-default);
         width: 100%;
         max-width: 300px;
         display: flex;

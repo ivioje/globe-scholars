@@ -96,6 +96,7 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  text-transform: capitalize;
 }
 
 .profile-body {
@@ -267,12 +268,14 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      text-transform: capitalize;
     }
 
     .work-authors {
       font-size: 13px;
       color: var(--text-secondary);
       margin: 0;
+      text-transform: capitalize;
     }
 
     .work-year {
@@ -295,6 +298,7 @@
       font-family: inherit;
       cursor: pointer;
       transition: background 0.15s;
+      color: var(--text-secondary);
 
       &:hover {
         background: var(--bg-secondary);
