@@ -104,6 +104,7 @@ export class ScholarProfileComponent implements OnInit {
         this.works = this.works.filter(w => w.id !== this.workToDelete);
         this.showConfirmationModal = false;
         this.workToDelete = null;
+        alert('Deleted Successfully')
       },
       error: () => {
         alert('Failed to delete file');

@@ -1,6 +1,6 @@
 .breadcrumb {
   font-size: 14px;
-  color: #777;
+  color: var(--text-muted);
   margin-bottom: 20px;
 
   margin-top: 20px;
@@ -8,18 +8,18 @@
 
   a {
     text-decoration: none;
-    color: #777;
+    color: var(--text-muted);
   }
 
   a:active {
     font-weight: 500;
   }
   a:hover {
-    color: #434343;
+    color: var(--text-primary);
     text-decoration: underline;
   }
 
   a:visited {
-    color: #777;
+    color: var(--text-muted);
   }
 }

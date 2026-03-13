@@ -46,7 +46,7 @@ export class RepositoryService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`
     });
-    return this.http.get<void>(`${this.apiUrl}/${id}/delete/`, { headers });
+    return this.http.delete<void>(`${this.apiUrl}/${id}/delete/`, { headers });
   }
 
 }
