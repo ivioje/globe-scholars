@@ -15,6 +15,9 @@
                     <img [src]="userImage"  alt=""/>
                 </div>
             }
+            <button class="theme-toggle" (click)="themeService.toggle()" title="Toggle theme">
+                {{ themeService.isDark ? 'Light' : 'Dark' }}
+            </button>
             <button>
                 @if(!authService.isLoggedIn) {
                     <a routerLink="/login">LOGIN</a>

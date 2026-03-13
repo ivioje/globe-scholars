@@ -31,7 +31,7 @@
           <div class="scholar-info">
             <p class="scholar-name">{{ scholar.fullName }}</p>
             <p class="scholar-year">{{ getYear(scholar.createdAt) }}</p>
-            <p class="scholar-uploads">{{ scholar.uploadCount }}</p>
+            <p class="scholar-uploads">{{ scholar.uploadCount > 1? `${scholar.uploadCount} works` : `${scholar.uploadCount} work` }}</p>
           </div>
         </div>
       }
