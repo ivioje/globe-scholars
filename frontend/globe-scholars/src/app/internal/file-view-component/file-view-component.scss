@@ -26,7 +26,7 @@
 
       .meta-label {
         font-size: 0.95rem;
-        color: #555;
+        color: var(--text-secondary);
         min-width: 90px;
       }
 
@@ -42,10 +42,10 @@
 
   .content {
     padding: 20px;
-    background-color: #e0e0e0;
+    background-color: var(--bg-muted);
 
     .content-block {
-      border: 1px solid #e0e0e0;
+      border: 1px solid var(--bg-muted);
       padding: 1rem;
       margin-bottom: 0.5rem;
 
@@ -59,7 +59,7 @@
         font-size: 0.85rem;
         line-height: 1.6;
         margin: 0;
-        color: #333;
+        color: var(--text-primary);
       }
     }
   }
@@ -79,7 +79,7 @@
       width: 90px;
       height: 90px;
       border-radius: 50%;
-      background-color: #d9d9d9;
+      background-color: var(--bg-muted);
 
       img {
         width: 100%;

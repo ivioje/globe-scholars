@@ -3,8 +3,8 @@
     justify-content: space-between;
     align-items: center;
     padding: 5px 20px;
-    background-color: #ffffff;
-    border-bottom: 1px solid #ccc;
+    background-color: var(--bg-page);
+    border-bottom: 1px solid var(--border-default);
     .logo {
         font-size: 16px;
         font-weight: bold;
@@ -16,17 +16,17 @@
     }
     .menu a {
         text-decoration: none;
-        color: #333;
+        color: var(--text-primary);
         font-weight: 500;
     }
     .menu a:hover {
-        color: #000;
+        color: var(--text-primary);
     }
     .menu a:active {
         font-weight: 700;
     }
     .menu button {
-        background-color: #000;
+        background-color: var(--btn-primary-bg);
         padding: 10px 20px;
         outline: none;
         border: 1px solid;
@@ -40,7 +40,7 @@
     }
     .menu button a {
         text-decoration: none;
-        color: #fff;
+        color: var(--btn-primary-text);
     }
     .menu div img {
         width: 30px;
