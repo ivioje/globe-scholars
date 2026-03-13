@@ -50,9 +50,14 @@ export class RepositoryComponent implements OnInit {
     this.loadScholars();
   }
 
+  onSearchChange() {
+    this.currentPage = 1;
+    this.loadWorks(this.currentPage);
+  }
+
   loadWorks(page: number) {
     this.isLoading = true;
-    this.repositoryService.getWorks(page).subscribe({
+    this.repositoryService.getWorks(page, this.searchQuery).subscribe({
       next: (res) => {
         this.works = res.results;
         this.hasNext = !!res.next;
@@ -102,9 +107,7 @@ export class RepositoryComponent implements OnInit {
     const now = new Date().getFullYear();
     return this.works
       .filter(work => {
-        const matchesSearch = !this.searchQuery ||
-          work.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-          work.authors.toLowerCase().includes(this.searchQuery.toLowerCase());
+        const matchesSearch = true;
 
         const matchesYear = (() => {
           switch (this.activeFilter) {
