@@ -40,9 +40,11 @@ describe('RepositoryService', () => {
   });
 
   it('should get works list', () => {
-    service.getWorks().subscribe(works => {
-      expect(works.count).toBe(1);
-      expect(works.results[0].title).toBe('Test Work');
+    service.getWorks().subscribe({
+      next: (res) => {
+        expect(res.results.length).toBe(1);
+        expect(res.results[0].title).toBe('Test Work');
+      }
     });
 
     const req = httpTestingController.expectOne(`${apiUrl}/?page=1`);
@@ -94,8 +96,10 @@ describe('RepositoryService', () => {
   });
 
   it('should return empty array when no works found', () => {
-    service.getWorks().subscribe(works => {
-      expect(works.count).toBe(0);
+    service.getWorks().subscribe({
+      next: (res) => {
+        expect(res.results.length).toBe(0);
+      }
     });
 
     const req = httpTestingController.expectOne(`${apiUrl}/?page=1`);
