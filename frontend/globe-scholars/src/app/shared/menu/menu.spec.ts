@@ -47,7 +47,7 @@ describe('Menu', () => {
   it('Home link should navigate to landing page', async () => {
     const router = TestBed.inject(Router);
     spyOn(router, 'navigateByUrl').and.returnValue(Promise.resolve(true));
-    fixture.nativeElement.querySelector('a[routerLink="/"]').click();
+    fixture.nativeElement.querySelector('a[routerLink="/home"]').click();
     await fixture.whenStable();
     expect(router.navigateByUrl).toHaveBeenCalled();
   });

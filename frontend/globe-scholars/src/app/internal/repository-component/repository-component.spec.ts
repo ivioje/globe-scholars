@@ -47,11 +47,16 @@ describe('RepositoryComponent', () => {
 
   beforeEach(async () => {
     const repoSpy = jasmine.createSpyObj('RepositoryService', ['getWorks', 'downloadWork']);
-    const scholarsSpy = jasmine.createSpyObj('ScholarsService', ['getScholars']);
+    const scholarsSpy = jasmine.createSpyObj('ScholarsService', ['getScholars', 'getScholarById']);
 
-    repoSpy.getWorks.and.returnValue(of([mockWork]));
+    repoSpy.getWorks.and.returnValue(of({
+      results: [mockWork],
+      next: null,
+      previous: null
+    }));
     repoSpy.downloadWork.and.returnValue(of(new Blob(['pdf'])));
     scholarsSpy.getScholars.and.returnValue(of([mockScholar]));
+    scholarsSpy.getScholarById.and.returnValue(of(mockScholar));
 
     await TestBed.configureTestingModule({
       imports: [RepositoryComponent],
@@ -94,7 +99,7 @@ describe('RepositoryComponent', () => {
 
   it('should set error when loading works fails', () => {
     repositoryService.getWorks.and.returnValue(throwError(() => new Error()));
-    component.loadWorks();
+    component.loadWorks(1);
     expect(component.error).toBe('Failed to load works.');
     expect(component.isLoading).toBeFalse();
   });
