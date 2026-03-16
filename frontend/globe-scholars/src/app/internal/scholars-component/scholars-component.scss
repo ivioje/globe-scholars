@@ -124,3 +124,47 @@ h1 {
     }
   }
 }
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: 100%;
+
+  button {
+    outline: none;
+    min-width: 34px;
+    padding: 5px 10px;
+    border: 1px solid var(--border-default);
+    border-radius: 5px;
+    background: var(--bg-page);
+    color: var(--text-primary);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+
+    &:hover:not(:disabled) {
+      background: var(--bg-hover);
+    }
+
+    &.active {
+      background: var(--btn-primary-bg);
+      color: var(--btn-primary-text);
+      border-color: var(--btn-primary-bg);
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+  }
+
+  .page-indicator {
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding: 0 4px;
+  }
+}

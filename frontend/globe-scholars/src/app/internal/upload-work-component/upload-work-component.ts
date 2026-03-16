@@ -103,7 +103,7 @@ export class UploadWorkComponent implements OnDestroy {
   }
 
   startPolling(id: number) {
-    this.pollingSubscription = interval(500).pipe(
+    this.pollingSubscription = interval(1000).pipe(
       switchMap(() => this.uploadService.getConversionStatus(id)),
       takeWhile(res => res.conversion_status !== 'completed' && res.conversion_status !== 'failed', true)
     ).subscribe({

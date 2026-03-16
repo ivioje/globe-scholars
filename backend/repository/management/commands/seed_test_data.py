@@ -11,37 +11,25 @@ class Command(BaseCommand):
     help = 'Creates test user with test data for e2e tests'
 
     def handle(self, *args, **kwargs):
-        user, created = User.objects.get_or_create(
-            username='testuser',
-            defaults={
-                'email': 'testuser@test.com',
-                'first_name': 'Test',
-                'last_name': 'User',
-                'bio': 'Test bio',
-                'affiliation': 'Test University',
-                'country': 'Germany',
-            }
-        )
-        if created:
-            user.set_password('TestPass123!')
-            user.save()
-            self.stdout.write(self.style.SUCCESS('Created testuser'))
-        else:
-            self.stdout.write('testuser already exists')
+        for i in range(10):
 
-        user2, created = User.objects.get_or_create(
-            username='testuser2',
-            defaults={
-                'email': 'testuser2@test.com',
-                'first_name': 'Test2',
-                'last_name': 'User2',
-                'affiliation': 'Another University',
-            }
-        )
-        if created:
-            user2.set_password('TestPass123!')
-            user2.save()
-            self.stdout.write(self.style.SUCCESS('Created testuser2'))
+            user, created = User.objects.get_or_create(
+                username=f"testuser{i}",
+                defaults={
+                    'email': f'testuser{i}@test.com',
+                    'first_name': 'Test',
+                    'last_name': f'User{i}',
+                    'bio': 'Test bio',
+                    'affiliation': 'Test University',
+                    'country': 'Germany',
+                }
+            )
+            if created:
+                user.set_password('TestPass123!')
+                user.save()
+                self.stdout.write(self.style.SUCCESS(f'Created testuser{i}'))
+            else:
+                self.stdout.write(f'testuser{i} already exists')
 
         fixtures_dir = os.path.join(os.path.dirname(__file__), 'fixtures')
         pdf_path = os.path.join(fixtures_dir, 'test.pdf')
@@ -53,7 +41,7 @@ class Command(BaseCommand):
             title='Test Work One',
             uploader=user,
             defaults={
-                'authors': 'Test User',
+                'authors': 'Test User0',
                 'publication_year': 2024,
                 'description': 'Test description',
                 'file_type': 'pdf',

@@ -63,11 +63,28 @@
           <a routerLink="/home/scholars">View All</a>
         </div>
       </div>
+      @if (scholarHasPrev || scholarHasNext) {
+        <div class="pagination">
+          <button (click)="prevScholarPage()" [disabled]="!scholarHasPrev">
+            Previous
+          </button>
+
+          <span class="page-indicator">
+            Page {{ scholarPage }}
+          </span>
+
+          <button (click)="nextScholarPage()" [disabled]="!scholarHasNext">
+            Next
+          </button>
+        </div>
+      }
+
       <div class="scholars-list">
         @for (scholar of scholars; track scholar.id) {
-          <div class="scholar-row"
-               (click)="setAuthorFilter(scholar.id)"
-               [class.active]="authorFilter === scholar.fullName"
+          <div
+            class="scholar-row"
+            (click)="setAuthorFilter(scholar.id)"
+            [class.active]="authorFilterId === scholar.id"
           >
             <img
               [src]="'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png'"

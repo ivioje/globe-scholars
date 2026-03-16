@@ -4,6 +4,8 @@ import {FormsModule} from '@angular/forms';
 import {ScholarsService} from '../../services/scholars/scholars-service';
 import {Scholar} from '../../services/scholars/scholar.model';
 import {Router} from '@angular/router';
+import {Subject} from 'rxjs';
+import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
 
 @Component({
   selector: 'app-scholars',
@@ -15,10 +17,15 @@ import {Router} from '@angular/router';
 export class ScholarsComponent implements OnInit {
   searchQuery = '';
   sortAsc = true;
+  currentPage = 1;
+  hasNext = false;
+  hasPrev = false;
 
   scholars: Scholar[] = [];
   isLoading = false;
   error: string | null = null;
+
+  private searchSubject = new Subject<string>();
 
   constructor(
     private scholarsService: ScholarsService,
@@ -29,15 +36,59 @@ export class ScholarsComponent implements OnInit {
 
   ngOnInit() {
     this.loadScholars();
+    this.searchSubject.pipe(
+      debounceTime(400),
+      distinctUntilChanged()
+    ).subscribe(() => {
+      this.currentPage = 1;
+      this.loadScholars();
+    });
+  }
+
+  onSearchChange() {
+    this.searchSubject.next(this.searchQuery);
+  }
+
+  toggleSort() {
+    this.sortAsc = !this.sortAsc;
+    this.currentPage = 1;
+    this.loadScholars();
+  }
+
+  getYear(date: Date): number {
+    return new Date(date).getFullYear();
+  }
+
+  goToProfile(id: number) {
+    this.router.navigate(['/home/scholars', id]);
+  }
+
+  prevPage() {
+    if (this.hasPrev) {
+      this.currentPage--;
+      this.loadScholars();
+    }
+  }
+
+  nextPage() {
+    if (this.hasNext) {
+      this.currentPage++;
+      this.loadScholars();
+    }
+  }
+
+  get ordering(): string {
+    return this.sortAsc ? 'full_name' : '-full_name';
   }
 
   loadScholars() {
     this.isLoading = true;
     this.error = null;
-
-    this.scholarsService.getScholars().subscribe({
-      next: (data: Scholar[]) => {
-        this.scholars = data;
+    this.scholarsService.getScholars(this.currentPage, this.searchQuery, this.ordering).subscribe({
+      next: (res) => {
+        this.scholars = res.results;
+        this.hasNext = !!res.next;
+        this.hasPrev = !!res.previous;
         this.isLoading = false;
         this.cdr.detectChanges();
       },
@@ -49,27 +100,7 @@ export class ScholarsComponent implements OnInit {
     });
   }
 
-
   get filteredScholars(): Scholar[] {
-    return [...this.scholars]
-      .filter(s =>
-        (s.fullName ?? '').toLowerCase().includes(this.searchQuery.toLowerCase())
-      )
-      .sort((a, b) => {
-        const cmp = (a.fullName ?? '').localeCompare(b.fullName ?? '');
-        return this.sortAsc ? cmp : -cmp;
-      });
-  }
-
-  toggleSort() {
-    this.sortAsc = !this.sortAsc;
-  }
-
-  getYear(date: Date): number {
-    return date.getFullYear();
-  }
-
-  goToProfile(id: number) {
-    this.router.navigate(['/home/scholars', id]);
+    return this.scholars;
   }
 }

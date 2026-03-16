@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
-import {Scholar} from './scholar.model';
+import {Scholar, ScholarsResponse} from './scholar.model';
 import {environment} from '../../../environments/environment.development';
 
 @Injectable({providedIn: 'root'})
@@ -11,9 +11,15 @@ export class ScholarsService {
   constructor(private http: HttpClient) {
   }
 
-  getScholars(): Observable<Scholar[]> {
-    return this.http.get<any>(this.apiUrl).pipe(
-      map(response => response.results.map((s: any): Scholar => this.mapScholar(s)))
+  getScholars(page: number = 1, search: string = '', ordering: string = 'full_name'): Observable<any> {
+    const params = new URLSearchParams({ page: String(page), ordering });
+    if (search) params.set('search', search);
+    return this.http.get<ScholarsResponse>(`${this.apiUrl}?${params}`).pipe(
+      map((res: any) => ({
+        results: res.results.map((s: any) => this.mapScholar(s)),
+        next: res.next,
+        previous: res.previous,
+      }))
     );
   }
 

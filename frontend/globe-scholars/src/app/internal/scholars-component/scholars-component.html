@@ -1,9 +1,8 @@
 <div class="scholars-container">
-
   <h1>Search Scholars</h1>
 
   <div class="search-bar">
-    <input type="text" [(ngModel)]="searchQuery" placeholder="Search by name..."/>
+    <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" placeholder="Search by name..."/>
   </div>
 
   <div class="toolbar">
@@ -19,6 +18,13 @@
   } @else if (filteredScholars.length === 0) {
     <div class="state-message">No scholars found.</div>
   } @else {
+    @if (hasPrev || hasNext) {
+      <div class="pagination">
+        <button (click)="prevPage()" [disabled]="!hasPrev">Previous</button>
+        <span class="page-indicator">Page {{ currentPage }}</span>
+        <button (click)="nextPage()" [disabled]="!hasNext">Next</button>
+      </div>
+    }
     <div class="scholars-grid">
       @for (scholar of filteredScholars; track scholar.id) {
         <div class="scholar-card" (click)="goToProfile(scholar.id)" style="cursor: pointer;">
@@ -31,7 +37,7 @@
           <div class="scholar-info">
             <p class="scholar-name">{{ scholar.fullName }}</p>
             <p class="scholar-year">{{ getYear(scholar.createdAt) }}</p>
-            <p class="scholar-uploads">{{ scholar.uploadCount > 1? `${scholar.uploadCount} works` : `${scholar.uploadCount} work` }}</p>
+            <p class="scholar-uploads">{{ scholar.uploadCount > 1 ? scholar.uploadCount + ' works' : scholar.uploadCount + ' work' }}</p>
           </div>
         </div>
       }

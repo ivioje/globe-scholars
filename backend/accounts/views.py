@@ -5,6 +5,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate, get_user_model
 from django.http import HttpResponse
+from django.db.models import Value, F
+from django.db.models.functions import Concat
 from io import BytesIO
 import weasyprint
 from drf_spectacular.utils import extend_schema, OpenApiParameter
@@ -154,11 +156,15 @@ class ScholarListView(generics.ListAPIView):
     serializer_class   = PublicUserProfileSerializer
     filter_backends    = [filters.SearchFilter, filters.OrderingFilter]
     search_fields      = ['username', 'first_name', 'last_name', 'affiliation', 'country']
-    ordering_fields    = ['username', 'created_at']
-    ordering           = ['-created_at']
+    ordering_fields    = ['full_name', 'last_name', 'created_at']
+    ordering           = ['full_name']
 
     def get_queryset(self):
-        return User.objects.filter(is_active=True, is_staff=False)
+            return User.objects.filter(
+                is_active=True, is_staff=False
+            ).annotate(
+                full_name=Concat('first_name', Value(' '), 'last_name')
+            )
 
 
 class ScholarDetailView(generics.RetrieveAPIView):

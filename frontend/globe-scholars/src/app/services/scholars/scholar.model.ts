@@ -11,3 +11,11 @@ export interface Scholar {
   createdAt: Date;
   uploadCount: number;
 }
+
+export interface ScholarsResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Scholar[];
+}
+

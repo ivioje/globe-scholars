@@ -26,6 +26,12 @@ export class RepositoryComponent implements OnInit {
   hasNext = false;
   hasPrev = false;
 
+  authorFilterId: number | null = null;
+
+  scholarPage = 1;
+  scholarHasNext = false;
+  scholarHasPrev = false;
+
   buttons = [
     {id: 'last-year', text: 'Last Year'},
     {id: 'last-5-years', text: 'Last 5 Years'},
@@ -71,14 +77,27 @@ export class RepositoryComponent implements OnInit {
     });
   }
 
-  loadScholars() {
-    this.scholarsService.getScholars().subscribe({
-      next: (data) => {
-        this.scholars = data.slice(0, 4);
-      },
-      error: () => {
+  loadScholars(page: number = 1) {
+    this.scholarsService.getScholars(page).subscribe({
+      next: (res) => {
+        this.scholars = res.results;
+        this.scholarHasNext = !!res.next;
+        this.scholarHasPrev = !!res.previous;
+        this.scholarPage = page;
       }
     });
+  }
+
+  nextScholarPage() {
+    if (this.scholarHasNext) {
+      this.loadScholars(this.scholarPage + 1);
+    }
+  }
+
+  prevScholarPage() {
+    if (this.scholarHasPrev) {
+      this.loadScholars(this.scholarPage - 1);
+    }
   }
 
   downloadWork(work: WorkSummary) {
@@ -123,8 +142,8 @@ export class RepositoryComponent implements OnInit {
         })();
 
         const matchesAuthor = (() => {
-          if (this.authorFilter) {
-            return work.authors.toLowerCase().includes(this.authorFilter.toLowerCase());
+          if (this.authorFilterId) {
+            return work.uploader.id === this.authorFilterId;
           }
           return true;
         })();
@@ -140,15 +159,11 @@ export class RepositoryComponent implements OnInit {
   }
 
   setAuthorFilter(id: number) {
-    this.scholarsService.getScholarById(id).subscribe({
-      next: (scholar) => {
-        this.authorFilter = scholar.fullName;
-      }
-    });
+    this.authorFilterId = id;
   }
 
   resetAuthorFilter() {
-    this.authorFilter = '';
+    this.authorFilterId = null;
   }
 
   prevPage() {
