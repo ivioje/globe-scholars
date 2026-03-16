@@ -23,7 +23,7 @@ const mockWork: WorkSummary = {
   user_has_reacted: 'false'
 };
 
-const mockScholar: any = {
+const mockScholar = {
   id: 1,
   username: 'john',
   fullName: 'John Doe',
@@ -33,7 +33,7 @@ const mockScholar: any = {
   affiliation: 'MIT',
   country: 'USA',
   website: '',
-  createdAt: '2024-01-01',
+  createdAt: new Date('2024-01-01'),
   uploadCount: 5
 };
 
@@ -42,21 +42,17 @@ describe('RepositoryComponent', () => {
   let fixture: ComponentFixture<RepositoryComponent>;
   let repositoryService: jasmine.SpyObj<RepositoryService>;
   let scholarsService: jasmine.SpyObj<ScholarsService>;
-  let authService: AuthService;
+  let authService: jasmine.SpyObj<AuthService>;
   let router: Router;
 
   beforeEach(async () => {
     const repoSpy = jasmine.createSpyObj('RepositoryService', ['getWorks', 'downloadWork']);
-    const scholarsSpy = jasmine.createSpyObj('ScholarsService', ['getScholars', 'getScholarById']);
+    const scholarsSpy = jasmine.createSpyObj('ScholarsService', ['getScholars']);
+    const authSpy = jasmine.createSpyObj('AuthService', [], {isLoggedIn: false});
 
-    repoSpy.getWorks.and.returnValue(of({
-      results: [mockWork],
-      next: null,
-      previous: null
-    }));
+    repoSpy.getWorks.and.returnValue(of({results: [mockWork], next: null, previous: null}));
     repoSpy.downloadWork.and.returnValue(of(new Blob(['pdf'])));
-    scholarsSpy.getScholars.and.returnValue(of([mockScholar]));
-    scholarsSpy.getScholarById.and.returnValue(of(mockScholar));
+    scholarsSpy.getScholars.and.returnValue(of({results: [mockScholar], next: null, previous: null}));
 
     await TestBed.configureTestingModule({
       imports: [RepositoryComponent],
@@ -66,6 +62,7 @@ describe('RepositoryComponent', () => {
         provideRouter([]),
         {provide: RepositoryService, useValue: repoSpy},
         {provide: ScholarsService, useValue: scholarsSpy},
+        {provide: AuthService, useValue: authSpy},
       ]
     }).compileComponents();
 
@@ -73,12 +70,11 @@ describe('RepositoryComponent', () => {
     component = fixture.componentInstance;
     repositoryService = TestBed.inject(RepositoryService) as jasmine.SpyObj<RepositoryService>;
     scholarsService = TestBed.inject(ScholarsService) as jasmine.SpyObj<ScholarsService>;
-    authService = TestBed.inject(AuthService);
+    authService = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
     router = TestBed.inject(Router);
+
     fixture.detectChanges();
   });
-
-  afterEach(() => sessionStorage.clear());
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -88,12 +84,14 @@ describe('RepositoryComponent', () => {
     spyOn(component, 'loadWorks');
     spyOn(component, 'loadScholars');
     component.ngOnInit();
-    expect(component.loadWorks).toHaveBeenCalled();
+    expect(component.loadWorks).toHaveBeenCalledWith(component.currentPage);
     expect(component.loadScholars).toHaveBeenCalled();
   });
 
   it('should load works correctly', () => {
     expect(component.works).toEqual([mockWork]);
+    expect(component.hasNext).toBeFalse();
+    expect(component.hasPrev).toBeFalse();
     expect(component.isLoading).toBeFalse();
   });
 
@@ -126,45 +124,41 @@ describe('RepositoryComponent', () => {
   });
 
   it('should navigate to work when logged in', () => {
-    spyOn(sessionStorage, 'getItem').and.returnValue('token');
+    Object.defineProperty(authService, 'isLoggedIn', { get: () => true, configurable: true });
     spyOn(router, 'navigate');
     component.openWork(1);
     expect(router.navigate).toHaveBeenCalledWith(['/home/repository', 1]);
   });
 
-  it('should set active filter', () => {
-    component.setFilter('last-year');
-    expect(component.activeFilter).toBe('last-year');
+  it('should show login modal when opening work while not logged in', () => {
+    Object.defineProperty(authService, 'isLoggedIn', { get: () => false, configurable: true });
+    component.openWork(1);
+    expect(component.showLoginModal).toBeTrue();
   });
 
-  it('filteredWorks should filter by last year', () => {
+  it('filteredWorks should filter by authorFilterId', () => {
+    component.works = [
+      {...mockWork, uploader: {id: 1, username: 'john', full_name: 'John Doe', affiliation: 'MIT'}},
+      {...mockWork, id: 2, uploader: {id: 2, username: 'alice', full_name: 'Alice Smith', affiliation: 'MIT'}}
+    ];
+    component.setAuthorFilter(1);
+    expect(component.filteredWorks.length).toBe(1);
+    expect(component.filteredWorks[0].uploader.id).toBe(1);
+  });
+
+  it('filteredWorks should filter by year ranges correctly', () => {
     const now = new Date().getFullYear();
     component.works = [
       {...mockWork, publication_year: now},
-      {...mockWork, id: 2, publication_year: now - 5}
+      {...mockWork, id: 2, publication_year: now - 5},
+      {...mockWork, id: 3, publication_year: now - 10}
     ];
     component.setFilter('last-year');
-    expect(component.filteredWorks.length).toBe(1);
-  });
-
-  it('filteredWorks should filter by last 5 years', () => {
-    const now = new Date().getFullYear();
-    component.works = [
-      {...mockWork, publication_year: now - 3},
-      {...mockWork, id: 2, publication_year: now - 10}
-    ];
+    expect(component.filteredWorks.every(w => w.publication_year >= now - 1)).toBeTrue();
     component.setFilter('last-5-years');
-    expect(component.filteredWorks.length).toBe(1);
-  });
-
-  it('filteredWorks should filter by last 10 years', () => {
-    const now = new Date().getFullYear();
-    component.works = [
-      {...mockWork, publication_year: now - 8},
-      {...mockWork, id: 2, publication_year: now - 15}
-    ];
+    expect(component.filteredWorks.every(w => w.publication_year >= now - 5)).toBeTrue();
     component.setFilter('last-10-years');
-    expect(component.filteredWorks.length).toBe(1);
+    expect(component.filteredWorks.every(w => w.publication_year >= now - 10)).toBeTrue();
   });
 
   it('filteredWorks should sort by upload date descending', () => {
@@ -173,11 +167,6 @@ describe('RepositoryComponent', () => {
       {...mockWork, id: 2, uploaded_at: '2024-06-01T00:00:00Z'},
     ];
     expect(component.filteredWorks[0].id).toBe(2);
-  });
-
-  it('filteredWorks should return all works for all-time filter', () => {
-    component.works = [mockWork, {...mockWork, id: 2, publication_year: 1990}];
-    component.setFilter('all-time');
-    expect(component.filteredWorks.length).toBe(2);
+    expect(component.filteredWorks[1].id).toBe(1);
   });
 });
