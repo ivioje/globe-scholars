@@ -1,16 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { RouterModule, Router } from '@angular/router';
-import { UserProfileService } from '../../services/user-profile/user-profile-service';
-import { UserProfile, UpdateProfileRequest } from '../../services/user-profile/user-profile.model';
-import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {RouterModule, Router} from '@angular/router';
+import {UserProfileService} from '../../services/user-profile/user-profile-service';
+import {UserProfile, UpdateProfileRequest} from '../../services/user-profile/user-profile.model';
+import {FormGroup, FormControl, Validators, ReactiveFormsModule} from '@angular/forms';
+import {ModalComponent} from '../../shared/modal-component/modal-component';
 
 
 @Component({
   selector: 'app-user-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, RouterModule, ReactiveFormsModule, ModalComponent],
   templateUrl: './user-profile-component.html',
   styleUrl: './user-profile-component.scss',
 })
@@ -21,13 +22,15 @@ export class UserProfileComponent implements OnInit {
   isEditing = false;
   isSaving = false;
   saveSuccess = false;
+  showSaveConfirm = false;
 
   form: UpdateProfileRequest = {};
 
   constructor(
     private profileService: UserProfileService,
     private router: Router
-  ) {}
+  ) {
+  }
 
   ngOnInit() {
     this.profileService.getProfile().subscribe({
@@ -102,9 +105,17 @@ export class UserProfileComponent implements OnInit {
     new_password2: new FormControl('', [Validators.required]),
   });
 
-  get oldPassword() { return this.passwordForm.get('old_password'); }
-  get newPassword() { return this.passwordForm.get('new_password'); }
-  get newPassword2() { return this.passwordForm.get('new_password2'); }
+  get oldPassword() {
+    return this.passwordForm.get('old_password');
+  }
+
+  get newPassword() {
+    return this.passwordForm.get('new_password');
+  }
+
+  get newPassword2() {
+    return this.passwordForm.get('new_password2');
+  }
 
   cancelChangingPassword() {
     this.isChangingPassword = false;
@@ -150,5 +161,10 @@ export class UserProfileComponent implements OnInit {
     sessionStorage.removeItem('access_token');
     sessionStorage.removeItem('refresh_token');
     this.router.navigate(['/login']);
+  }
+
+  confirmSave() {
+    this.showSaveConfirm = false;
+    this.saveProfile();
   }
 }
