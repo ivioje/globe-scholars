@@ -4,7 +4,6 @@ import { AuthService } from './auth-service';
 import { NewUser, UserAccount } from './interface';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -16,34 +15,7 @@ describe('AuthService', () => {
     password2: 'Password123'
   };
 
-  let httpTestingController: HttpTestingController;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        provideZonelessChangeDetection()
-      ]
-    });
-    service = TestBed.inject(AuthService);
-    httpTestingController = TestBed.inject(HttpTestingController);
-  });
-
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-
-  it('should make an http request to the register endpoint', () => {
-    service.register(newUser).subscribe();
-    const req = httpTestingController.expectOne('http://localhost:8001/api/auth/signup/');
-    expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual(newUser);
-    httpTestingController.verify();
-  });
-
-  it('should register a new user', (done: DoneFn) => {
-    const expectedResponse: UserAccount = {
+  const userAccount: UserAccount = {
       message: 'Account created successfully.',
       user: {
           id: 1,
@@ -65,6 +37,34 @@ describe('AuthService', () => {
         refresh: 'refresh_token'
       }
     };
+
+  let httpTestingController: HttpTestingController;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ]
+    });
+    service = TestBed.inject(AuthService);
+    httpTestingController = TestBed.inject(HttpTestingController);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+
+  it('should make an http request to the register endpoint', () => {
+    service.register(newUser).subscribe();
+    const req = httpTestingController.expectOne('http://localhost:8001/api/auth/signup/');
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(newUser);
+    httpTestingController.verify();
+  });
+
+  it('should register a new user', (done: DoneFn) => {
+    const expectedResponse = userAccount;
     service.register(newUser).subscribe(res => {
       expect(res).toEqual(expectedResponse);
       done();
@@ -100,4 +100,20 @@ describe('AuthService', () => {
       req.flush({ password: ['Passwords do not match.'] }, { status: 400, statusText: 'Bad Request' });
       httpTestingController.verify();
     });
+
+    it('should log a user in', (done: DoneFn) => {
+      const response = userAccount;
+      service.login('John', 'Pass@123').subscribe(res => {
+        expect(res.message).toEqual('Account created successfully.');
+        expect(sessionStorage.getItem('access_token')).toBe('access_token');
+        expect(sessionStorage.getItem('refresh_token')).toBe('refresh_token');
+        expect(sessionStorage.getItem('username')).toBe('John');
+        done();
+      });
+    
+      const req = httpTestingController.expectOne('http://localhost:8001/api/auth/login/');
+      expect(req.request.method).toBe('POST');
+      req.flush(response);
+      httpTestingController.verify();
+    });    
 });

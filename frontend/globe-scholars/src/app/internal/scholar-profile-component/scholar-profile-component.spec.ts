@@ -149,4 +149,10 @@ describe('ScholarProfileComponent', () => {
     component.downloadProfile();
     expect(console.error).toHaveBeenCalledWith('Failed to download profile');
   });
+
+  it('should set workToDelete and show modal on confirmDelete', () => {
+    component.confirmDelete(5);
+    expect(component.workToDelete).toBe(5);
+    expect(component.showConfirmationModal).toBeTrue();
+  });
 });
