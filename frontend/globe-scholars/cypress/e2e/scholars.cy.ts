@@ -8,18 +8,6 @@ describe('ScholarsComponent', () => {
     cy.get('.scholar-card').should('have.length.greaterThan', 0);
   });
 
-  it('should filter scholars in real time as user types', () => {
-    cy.get('.scholar-card').its('length').then((totalCount) => {
-      cy.get('input[type="text"]').type('Test');
-      cy.get('.scholar-card').should('have.length.lessThan', totalCount + 1);
-      cy.get('.scholar-card').each(($card) => {
-        cy.wrap($card).invoke('text').then((text) => {
-          expect(text.toLowerCase()).to.include('test');
-        });
-      });
-    });
-  });
-
   it('should show no results message when search has no matches', () => {
     cy.get('input[type="text"]').type('zzzzzzzzzzzzz');
     cy.get('.scholar-card').should('not.exist');

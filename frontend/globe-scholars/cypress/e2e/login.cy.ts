@@ -5,14 +5,14 @@ describe('Login', () => {
   });
 
   it('should login successfully and redirect to home page', () => {
-    cy.get('input[formControlName="username"]').type('testuser');
+    cy.get('input[formControlName="username"]').type('testuser0');
     cy.get('input[formControlName="password"]').type('TestPass123!');
     cy.get('button[type="submit"]').click();
     cy.url().should('include', '/home');
   });
 
   it('should show error on wrong credentials', () => {
-    cy.get('input[formControlName="username"]').type('testuser');
+    cy.get('input[formControlName="username"]').type('testuser0');
     cy.get('input[formControlName="password"]').type('WrongPassword!');
     cy.get('button[type="submit"]').click();
     cy.get('.error').should('be.visible');

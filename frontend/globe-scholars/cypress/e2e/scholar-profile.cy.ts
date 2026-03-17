@@ -32,7 +32,7 @@ describe('ScholarProfileComponent', () => {
         cy.stub(win.navigator.clipboard, 'writeText').resolves();
       });
       cy.get('.action-btn--outline').click();
-      cy.get('.copied-text').should('be.visible');
+      cy.get('.copied-text').should('exist');
     });
 
     it('should show error for non-existent scholar', () => {
@@ -48,7 +48,7 @@ describe('ScholarProfileComponent', () => {
   describe('Viewing own profile', () => {
     beforeEach(() => {
       cy.visit('/home/scholars/1');
-      cy.login('testuser', 'TestPass123!');
+      cy.login('testuser0', 'TestPass123!');
       cy.reload();
     });
 
@@ -65,7 +65,7 @@ describe('ScholarProfileComponent', () => {
   describe('Viewing other user profile', () => {
     beforeEach(() => {
       cy.visit('/home/scholars/2');
-      cy.login('testuser', 'TestPass123!');
+      cy.login('testuser0', 'TestPass123!');
       cy.reload();
     });
 

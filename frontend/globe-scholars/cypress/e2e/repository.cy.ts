@@ -58,7 +58,7 @@ describe('Repository Page', () => {
   describe('With login', () => {
     beforeEach(() => {
       cy.visit('http://localhost:4200/home/repository');
-      cy.login('testuser', 'TestPass123!');
+      cy.login('testuser0', 'TestPass123!');
       cy.reload();
     });
 

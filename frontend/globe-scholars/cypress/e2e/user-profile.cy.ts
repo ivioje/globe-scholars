@@ -1,7 +1,7 @@
 describe('UserProfileComponent', () => {
 
   beforeEach(() => {
-    cy.login('testuser', 'TestPass123!');
+    cy.login('testuser0', 'TestPass123!');
     cy.visit('/home/profile');
     cy.reload();
   });

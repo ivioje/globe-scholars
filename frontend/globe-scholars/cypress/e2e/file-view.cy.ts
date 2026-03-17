@@ -11,7 +11,7 @@ describe('FileViewComponent', () => {
   describe('With login', () => {
     beforeEach(() => {
       cy.visit('/home/repository');
-      cy.login('testuser', 'TestPass123!');
+      cy.login('testuser0', 'TestPass123!');
       cy.reload();
     });
 
