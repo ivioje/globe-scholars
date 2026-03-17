@@ -19,8 +19,8 @@ describe('Menu', () => {
           {path: 'about', children: []},
           {path: 'login', children: []},
           {path: 'register', children: []},
-          {path: 'home/scholars', children: []},
-          {path: 'home/repository', children: []},
+          {path: 'scholars', children: []},
+          {path: 'repository', children: []},
         ]),
       ]
     }).compileComponents();
