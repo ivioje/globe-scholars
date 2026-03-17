@@ -15,9 +15,7 @@ export class RepositoryService {
     const params = new URLSearchParams({ page: String(page) });
     if (search) params.set('search', search);
     if (uploader) params.set('uploader', String(uploader));
-    return this.http.get(`${this.apiUrl}/?${params}`, {
-      headers: { Authorization: `Bearer ${sessionStorage.getItem('access_token')}` }
-    });
+    return this.http.get<WorksResponse>(`${this.apiUrl}/?${params}`);
   }
 
   getWorkDetail(id: number): Observable<WorkDetail> {
