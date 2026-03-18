@@ -102,6 +102,9 @@ export class ScholarProfileComponent implements OnInit {
     this.repositoryService.deleteWork(this.workToDelete).subscribe({
       next: () => {
         this.works = this.works.filter(w => w.id !== this.workToDelete);
+        if (this.scholar) {
+          this.scholar = {...this.scholar, uploadCount: this.scholar.uploadCount - 1};
+        }
         this.showConfirmationModal = false;
         this.workToDelete = null;
         alert('Deleted Successfully')
